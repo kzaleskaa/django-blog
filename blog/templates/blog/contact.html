@@ -1,0 +1,22 @@
+{% extends 'layout.html' %} 
+
+{%block title %}
+    Any questions, please feel free to contact us!
+{% endblock %}
+
+
+{% block content %} 
+<div class="container">
+  <form action="{% url "contact-page" %}" method="POST">
+    {% csrf_token %}
+    {% for field in contact_form %}
+      <div class="d-flex flex-column mb-2">
+        {{ field.label_tag }}
+        {{ field }}
+        {{ field.errors }}
+      </div>
+    {% endfor %}
+    <button class="btn btn-secondary mt-3">Submit</button>
+  </form>
+</div>
+{%endblock%}

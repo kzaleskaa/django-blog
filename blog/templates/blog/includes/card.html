@@ -1,0 +1,19 @@
+<li class="d-inline m-3">
+    <article class="card" style="width: 16rem">
+        {% if post.image %}
+            <img class="card-img-top" src="{{ post.image.url }}" alt="{{ post.title }}" />
+        {% endif %}
+        <div class="card-body">
+            <h5 class="card-title text-break">{{post | title}}</h5>
+            <p class="card-text">
+                {{ post.description }}
+            </p>
+            <a href="{% url "post-detail" post.slug %}" class="btn btn-secondary">Read more</a>
+            <p class="mt-2">
+                {% if post.user.username %}
+                    {{ post.user.username }}, 
+                {% endif %} 
+            {{ post.date }}</p>
+        </div>
+    </article>
+</li>

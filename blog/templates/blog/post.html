@@ -1,0 +1,88 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{%block title %}
+    {{post.title | title}}
+{%endblock%}
+
+{%block content%} 
+    <div id="intro" class="text-center">
+        <form action="{% url "saved-page" %}" method="POST" class="m-4">
+            {% csrf_token %}
+            <input type="hidden" value="{{ post.id }}" name="post_id">
+            <div>
+                <button class="btn btn-secondary">
+                    {% if saved_for_later %}
+                        Remove from "saved"
+                    {% else %}
+                        Save Article
+                    {% endif %}
+                </button>
+            </div>
+        </form>
+        {% if post_tags %}
+        <div class="m-4">
+            Tags:
+            {%for tag in post_tags%}
+                <span class="border rounded p-1 m-1 bg-info text-white text-center">{{ tag.tag_name }}</span>
+            {%endfor%}
+        </div>
+        {% endif %}
+    </div>
+
+    <div id="content" class="shadow rounded p-3">
+        {% if post.image %}
+        <img src="{{ post.image.url }}" class="rounded mx-auto d-block img-fluid"/>
+        {% endif %}
+        <p>{{post.content | linebreaks}}</p>
+        {% if post.user.email %}
+        <address>By <a href="mailto:{{post.user.email}}">{{post.user.username}}</a></address>    
+        {% endif %}
+        <p>{{ post.date }}</p>
+    </div>
+
+    <div class="mt-5 mb-3">
+        <h4>Comments</h4>
+        {% if comments %}
+        <ul class="list-unstyled">
+            {% for comment in comments%}
+                <li class="border rounded p-2 mb-2">
+                    <div class="d-flex flex-row justify-content-between text-center">
+                        <h6 class="font-weight-bold"> {{ comment.user.username }} 
+                            <span class="font-weight-normal">{{ comment.date }}</span>
+                        </h6>
+                        {% if user.is_authenticated %}
+                            {% if comment.user.id == user.id %}
+                                <a class="text-secondary text-decoration-none" href="{% url "delete-comment" comment.id post.slug %}">X</a>
+                            {%endif%}
+                        {%endif%}
+                    </div>
+                    <div>
+                    <p class="font-italic">{{comment.text}}</p>
+                    </div>
+                </li>
+            {%endfor%}
+        </ul>
+        {%else%}
+        <p>This post doesn't have any comment.</p>
+        {%endif%}
+        <div>
+            <h4>Add your feedback</h4>
+            {% if user.is_authenticated %}
+            <form action="{% url "post-detail" post.slug %}" method="POST">
+                {% csrf_token %}
+                {% for field in comment_form %}
+                    <div class="d-flex flex-column mb-2">
+                        {{ field.label_tag }}
+                        {{ field }}
+                        {{ field.errors }}
+                    </div>
+                {% endfor %}
+                <button class="btn btn-secondary mt-3">Save comment</button>
+            </form>
+            {%else%}
+            <p>Pleas login to add your own comments.</p>
+            {%endif%}
+        </div>
+    </div>
+{%endblock%}
