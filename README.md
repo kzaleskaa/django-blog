@@ -17,7 +17,7 @@ My django project hosted on heroku. Database was created via Amazon RDS (Relatio
 1. Download this repository.
     ```
    git clone https://github.com/kzaleskaa/django-blog.git
-   cd first-django-blog
+   cd django-blog
    ```
 2. Create your own Python virtual environment.
     ```
