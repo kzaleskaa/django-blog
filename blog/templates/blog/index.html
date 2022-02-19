@@ -1,0 +1,43 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{%block img%}
+  <img src="{% static "blog/images/bgc.jpg" %}" alt="Bacgorund image" class="img-fluid"/>
+{%endblock%}
+
+{%block content%}
+
+
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-dismissible alert-secondary">
+      <button type="button" class="close" data-dismiss="alert">
+      ×
+      </button>
+      <strong>{{message}}<strong>
+    </div>
+ {% endfor %}
+{% endif %}
+
+{% if user.is_authenticated %}
+  <h2 class="text-center mb-3">Hi {{user.username}}!</h2>
+{%endif%}
+
+<section id="about" class="shadow rounded m-4 p-3">
+  <h3 class="text-center mb-3">About</h3>
+  <div class="container-fluid">
+    Online personal reflections, comments, and photographs provided by the users. You can save chosen articles to read it later. Click "Read more" to see the post's details and add your own comment. Do you have any questions? Please feel free to contact us.
+  </div>
+</section>
+
+<section id="latest-posts">
+  <h3 class="text-center">Latest posts</h3>
+    <div>
+      <ul class="container d-flex justify-content-center flex-wrap">
+        {% for post in all_posts%}
+          {% include "blog/includes/card.html"%}
+        {% endfor %}
+      </ul>
+    </div>
+</section>
+{%endblock%}

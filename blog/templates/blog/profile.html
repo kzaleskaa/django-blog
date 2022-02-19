@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{%block title %}
+    {{ user.username }}'s profile
+{%endblock%}
+
+{%block content%} 
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-dismissible alert-secondary">
+      <button type="button" class="close" data-dismiss="alert">
+      ×
+      </button>
+      <strong>{{message}}<strong>
+    </div>
+ {% endfor %}
+{% endif %}
+
+{% if posts %}
+    <h3>Your created posts:</h3>
+    <ul class="container d-flex justify-content-center flex-wrap">
+        {%for post in posts %}
+            <li class="d-inline border border-second rounded m-1 p-2" style="width: 200px">
+            <div class="d-flex flex-row justify-content-between">    
+                <h4 class="text-break">{{ post.title | title }}</h4>
+                <a class="text-secondary text-decoration-none" href="{% url "delete-post" post.id%}">X</a>
+            </div>
+                <p>{{ post.description }}</p>
+                <a href="{% url "post-detail" post.slug %}">Read more...</a>
+            </li>
+        {%endfor%}
+    </ul>
+{% else %}
+<p>You don't have any post yet.</p>
+{% endif %}
+
+<h3>Add new post:</h3>
+<form action="/profile/" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% for field in post_form %}
+        <div class="d-flex flex-column mb-2">
+            {{ field.label_tag }}
+            {{ field }}
+            {{ field.errors }}
+        </div>
+    {% endfor %}
+    <button class="btn btn-secondary mt-3">Save post</button>
+</form>
+{%endblock%}

@@ -1,0 +1,146 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>{% block page_title %}My Blog{% endblock %}</title>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <link rel="shortcut icon" href="{% static 'blog/images/blogging.ico' %}" />
+    <link
+      rel="stylesheet"
+      href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+      integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p"
+      crossorigin="anonymous"
+    />
+  </head>
+
+  <body>
+    <header class="header bg-dark">
+      <nav class="navbar navbar-light justify-content-between container">
+        <ul class="nav">
+          <li class="nav-item">
+            <a
+              class="nav-link active text-light"
+              href="{% url 'starting-page' %}"
+              >Blog</a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-light" href="{% url 'all-posts-page' %}"
+              >All Posts</a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-light" href="{%url 'saved-page' %}"
+              >Saved</a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-light" href="{%url 'contact-page' %}"
+              >Contact</a
+            >
+          </li>
+        </ul>
+        <ul class="nav">
+          {% if user.is_authenticated%}
+          <li class="nav-item">
+            <a class="nav-link text-light" href="{%url 'profile-page' %}"
+              >Profile</a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-light" href="{%url 'signout-page' %}"
+              >Sign Out</a
+            >
+          </li>
+          {%else%}
+          <li class="nav-item">
+            <a class="nav-link text-light" href="{%url 'signup-page' %}"
+              >Sign Up</a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-light" href="{%url 'signin-page' %}"
+              >Sign In</a
+            >
+          </li>
+          {%endif%}
+        </ul>
+      </nav>
+      {%block img%}{%endblock%}
+    </header>
+
+    <main class="container mx-auto">
+      <h1 class="text-center mt-3 mb-3">{% block title %}{%endblock%}</h1>
+      {%block content%} {%endblock%}
+    </main>
+
+    <footer>
+      <div class="bg-dark footer text-center p-2 mt-4">
+        <p class="text-light">&copy First Django Blog</p>
+        <a
+          href="https://github.com/kzaleskaa"
+          class="text-light text-decoration-none"
+          ><i class="fab fa-github"></i> kzaleskaa</a
+        >
+      </div>
+    </footer>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"
+    ></script>
+    {% comment %}
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    {% endcomment %}
+  </body>
+  <script type="text/javascript">
+    $(document).on("submit", "#signup-form", function (e) {
+      e.preventDefault();
+
+      $.ajax({
+        type: "POST",
+        url: "/signup/",
+        data: {
+          username: $("#username").val(),
+          fname: $("#fname").val(),
+          lname: $("#lname").val(),
+          email: $("#email").val(),
+          pass: $("#pass").val(),
+          pass2: $("#pass2").val(),
+          csrfmiddlewaretoken: $("input[name='csrfmiddlewaretoken']").val(),
+        },
+        success: function (data) {
+          if (data.status == "error") {
+            $("strong.error").html(data.msg);
+            $("strong.success").html("");
+            $("#signup-form #pass").val("");
+            $("#signup-form #pass2").val("");
+          }
+          else if(data.status == "success") {
+            $("strong.error").html("");
+            $("strong.success").html(data.msg);
+            $('#signup-form')[0].reset()
+          }
+        }
+      });
+    });
+  </script>
+</html>

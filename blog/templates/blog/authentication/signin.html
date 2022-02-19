@@ -1,0 +1,28 @@
+{% extends 'layout.html' %} 
+
+{%block title%}
+    Sign In
+{%endblock%}
+
+{%block content%}
+{% if messages %}
+  {% for message in messages %}
+  <div class="text-center mb-3">
+    <strong class="error text-center text-danger">{{message}}</strong>
+  </div>
+ {% endfor %}
+{% endif %}
+
+<form action="/signin/" method="POST" style="width: 16rem" class="container mx-auto">
+    {% csrf_token %}
+    <div class="d-flex flex-column mb-2">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" pattern="[A-Za-z0-9]*" title="Username must be Alpha-Numeric!" required>
+    </div>
+    <div class="d-flex flex-column mb-2">
+        <label for="pass">Password:</label>
+        <input type="password" id="pass" name="pass" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters." required>
+    </div>
+    <button class="btn btn-secondary mt-3">Sign In</button>
+</form>
+{%endblock%}
